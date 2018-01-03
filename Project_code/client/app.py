@@ -30,9 +30,9 @@ def signup():
     if request.method == 'POST':
         passwords[request.form['inputName']] = request.form['pswrd']
         req = {'username': request.form['inputName']}
-        res = requests.post('http://127.0.0.1:5000/register', data=req, files=request.files)
+        res = requests.post('http://192.168.56.132:5000/register', data=req, files=request.files)
         return redirect(url_for('main'))
-    return render_template('recordingInit.html', recordingPhrase=rw.random_word())
+    return render_template('signup.html', recordingPhrase=rw.random_word())
 
 @app.route('/recognize', methods=['GET', 'POST'])
 def recognize():
@@ -40,10 +40,9 @@ def recognize():
     global username
     if request.method == 'POST':
         req = {'username':username}
-        res = requests.post('http://127.0.0.1:5000/authenticate', data=req, files=request.files)
-        #res = requests.post('http://128.30.31.185:5000/authenticate', data=req, files=request.files)
+        res = requests.post('http://192.168.56.132:5000/authenticate', data=req, files=request.files)
         confidence = int(res.text.split(',')[3].split(":")[1])
-        if confidence > 1000:
+        if confidence > 0:
             voice = True
             return redirect(url_for('loggedIn'))
         return render_template('recognize.html', err="voice")
